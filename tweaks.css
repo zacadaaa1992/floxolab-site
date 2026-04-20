@@ -1,0 +1,91 @@
+/* ========== TWEAKS PANEL ========== */
+.tweak-panel {
+  position: fixed;
+  right: 24px; bottom: 24px;
+  width: 280px;
+  background: linear-gradient(180deg, #141417 0%, #0d0d10 100%);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.8);
+  z-index: 100;
+  backdrop-filter: blur(12px);
+}
+.tweak-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.tweak-title {
+  font-size: 11px; letter-spacing: 0.1em; color: var(--text);
+}
+.tweak-close {
+  color: var(--muted);
+  font-size: 13px;
+  width: 20px; height: 20px;
+  display: grid; place-items: center;
+  border-radius: 4px;
+}
+.tweak-close:hover { color: var(--text); background: var(--surface-2); }
+
+.tweak-group { margin-bottom: 16px; }
+.tweak-group:last-child { margin-bottom: 0; }
+.tweak-label {
+  font-size: 10.5px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.tweak-hues { display: flex; gap: 8px; flex-wrap: wrap; }
+.tweak-hue {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform .15s;
+  outline: 1px solid var(--border-strong);
+  outline-offset: -1px;
+}
+.tweak-hue:hover { transform: scale(1.08); }
+.tweak-hue.active {
+  border-color: var(--text);
+  outline-color: transparent;
+}
+
+.tweak-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: var(--border-strong);
+  border-radius: 2px;
+  outline: none;
+}
+.tweak-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+.tweak-slider::-moz-range-thumb {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+.tweak-scale {
+  display: flex; justify-content: space-between;
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* Anim intensity scaling */
+html[data-anim-intensity="1"] *, html[data-anim-intensity="2"] * { animation-duration: 0s !important; transition-duration: 0s !important; }
+html[data-anim-intensity="3"] * { animation-duration: calc(var(--anim-dur, 1s) * 0.3) !important; }
+html[data-anim-intensity="10"] * { animation-iteration-count: infinite; }
