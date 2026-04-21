@@ -87,5 +87,6 @@
 
 /* Anim intensity scaling */
 html[data-anim-intensity="1"] *, html[data-anim-intensity="2"] * { animation-duration: 0s !important; transition-duration: 0s !important; }
+html[data-anim-intensity="1"] .aichat-window, html[data-anim-intensity="2"] .aichat-window { transition-duration: 0.3s !important; }
 html[data-anim-intensity="3"] * { animation-duration: calc(var(--anim-dur, 1s) * 0.3) !important; }
 html[data-anim-intensity="10"] * { animation-iteration-count: infinite; }

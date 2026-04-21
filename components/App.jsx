@@ -32,6 +32,41 @@ const App = () => {
     window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { [k]: v } }, "*");
   };
 
+  // Scroll progress bar + scroll-to-top + mobile menu
+  React.useEffect(() => {
+    const bar = document.getElementById("scroll-progress");
+    const top = document.getElementById("scroll-top");
+    const burger = document.getElementById("nav-burger");
+    const links = document.getElementById("nav-links");
+
+    const onScroll = () => {
+      const scrolled = window.scrollY;
+      const total = document.body.scrollHeight - window.innerHeight;
+      if (bar) bar.style.width = (scrolled / total * 100) + "%";
+      if (top) top.classList.toggle("visible", scrolled > 400);
+      const nav = document.getElementById("main-nav");
+      if (nav) nav.classList.toggle("nav-scrolled", scrolled > 60);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    if (top) top.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+    if (burger && links) {
+      burger.addEventListener("click", () => {
+        burger.classList.toggle("active");
+        links.classList.toggle("open");
+      });
+      links.querySelectorAll("a").forEach(a => {
+        a.addEventListener("click", () => {
+          burger.classList.remove("active");
+          links.classList.remove("open");
+        });
+      });
+    }
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   // Reveal on scroll
   React.useEffect(() => {
     const obs = new IntersectionObserver((entries) => {
@@ -61,18 +96,25 @@ const App = () => {
 
   return (
     <>
-      <nav className="nav">
+      <div className="scroll-progress-bar" id="scroll-progress"></div>
+
+      <nav className="nav" id="main-nav">
         <div className="container nav-inner">
           <a href="#" className="nav-logo">
             <div className="nav-logo-mark"></div>
             floxolab.com
           </a>
-          <div className="nav-links">
+          <div className="nav-links" id="nav-links">
+            <a href="#services">Services</a>
             <a href="#projects">Projects</a>
             <a href="#how-it-works">Process</a>
+            <a href="#roi">ROI</a>
             <a href="#faq">FAQ</a>
-            <a href="#contact" className="btn btn-primary nav-cta" style={{ color: "rgb(0, 0, 0)", backgroundColor: "rgb(16, 185, 129)" }}>Let's talk</a>
+            <a href="#contact" className="btn btn-primary nav-cta">Let's talk</a>
           </div>
+          <button className="nav-burger" id="nav-burger" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
         </div>
       </nav>
 
@@ -82,10 +124,20 @@ const App = () => {
       <HowItWorks />
       <Demo />
       <Projects />
+      <Metrics />
+      <ROICalculator />
       <Pricing />
       <FAQ />
       <About />
+      <Blog />
       <Contact />
+      <AIChat />
+
+      <button className="scroll-top" id="scroll-top" aria-label="Back to top">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
+      </button>
 
       {tweakOpen &&
       <div className="tweak-panel">

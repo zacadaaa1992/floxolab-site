@@ -1,13 +1,35 @@
+const CONTACT_WEBHOOK = "https://n8n.floxolab.com/webhook/contact";
+
 const Contact = () => {
   const [form, setForm] = React.useState({ name: "", email: "", stack: "", budget: "" });
   const [sent, setSent] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  const [error, setError] = React.useState(false);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (form.name && form.email) {
+    if (!form.name || !form.email) return;
+    setSending(true);
+    setError(false);
+    try {
+      if (CONTACT_WEBHOOK) {
+        const res = await fetch(CONTACT_WEBHOOK, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...form, submitted_at: new Date().toISOString(), source: "floxolab.com" }),
+        });
+        if (!res.ok) throw new Error("webhook failed");
+      } else {
+        await new Promise(r => setTimeout(r, 800));
+      }
       setSent(true);
-      setTimeout(() => setSent(false), 4000);
+      setForm({ name: "", email: "", stack: "", budget: "" });
+      setTimeout(() => setSent(false), 6000);
+    } catch {
+      setError(true);
+      setTimeout(() => setError(false), 4000);
     }
+    setSending(false);
   };
 
   return (
@@ -32,7 +54,7 @@ const Contact = () => {
               </div>
               <div className="contact-meta-row">
                 <span className="mono contact-meta-k">TELEGRAM</span>
-                <a href="#" className="contact-meta-v">@floxolab</a>
+                <a href="https://t.me/zacadaaa1992" className="contact-meta-v" target="_blank" rel="noopener">@zacadaaa1992</a>
               </div>
               <div className="contact-meta-row">
                 <span className="mono contact-meta-k">RESPONSE</span>
@@ -102,9 +124,9 @@ const Contact = () => {
               </div>
             </label>
 
-            <button type="submit" className="btn btn-primary form-submit">
-              {sent ? "Sent · I'll reply within 6h" : "Send brief"}
-              {!sent && (
+            <button type="submit" className="btn btn-primary form-submit" disabled={sending}>
+              {sent ? "✓ Sent · I'll reply within 6h" : error ? "Error — try again" : sending ? "Sending..." : "Send brief"}
+              {!sent && !sending && !error && (
                 <svg className="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M5 12h14M13 5l7 7-7 7"/>
                 </svg>
